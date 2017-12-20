@@ -1,7 +1,7 @@
 __author__ = 'davidwer'
 __author__ = 'omersc'
 # David Wertenteil
-# Omer Schwartz 201234002
+# Omer Schwartz
 
 """
 
