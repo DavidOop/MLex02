@@ -1,5 +1,3 @@
-from sqlalchemy.dialects.mssql.mxodbc import _VARBINARY_mxodbc
-
 __author__ = 'davidwer'
 __author__ = 'omersc'
 # David Wertenteil
@@ -134,3 +132,16 @@ print(
     "Logistic regression using [featureA, featureB] features cross validation:"
     "\n%s\n" % (metrics.classification_report(expected, predicted2)))
 print("Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted2))
+
+ima = []
+classi = (np.mean(circle_finder_arr[:180]) + np.mean(modulus_arr[:180]) + np.mean(center_values_arr[:180])) / 3
+for i, j , k in zip(circle_finder_arr[180:], modulus_arr[180:], center_values_arr[180:]):
+    if classi > (i + k +j)/3:
+        ima.append(0)
+    else:
+        ima.append(1)
+
+print(
+    "Logistic regression using [featureA, featureB] features cross validation:"
+    "\n%s\n" % (metrics.classification_report( digits.target[indices_0_1][n_samples // 2:], ima)))
+print("Confusion matrix:\n%s" % metrics.confusion_matrix( digits.target[indices_0_1][n_samples // 2:], ima))
