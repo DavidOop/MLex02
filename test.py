@@ -123,13 +123,15 @@ logistic_classifier.fit(X_scaled, Y)
 expected = Y
 predicted = logistic_classifier.predict(X_scaled)
 
-print("Logistic regression using [featureA, featureB] features:\n%s\n" % (
-metrics.classification_report(expected, predicted)))
+print("Logistic regression using Circle Finder, Modulus, "
+      "Center Values, Number of Zeros features:\n%s\n" %
+      (metrics.classification_report(expected, predicted)))
 print("Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted))
 # estimate the generalization performance using cross validation
 predicted2 = cross_val_predict(logistic_classifier, X_scaled, Y, cv=10)
 print(
-    "Logistic regression using [featureA, featureB] features cross validation:"
+    "Logistic regression using Circle Finder, Modulus, "
+    "Center Values, Number of Zeros features with cross validation:"
     "\n%s\n" % (metrics.classification_report(expected, predicted2)))
 print("Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted2))
 
