@@ -1,7 +1,9 @@
+from sqlalchemy.dialects.mssql.mxodbc import _VARBINARY_mxodbc
+
 __author__ = 'davidwer'
 __author__ = 'omersc'
 # David Wertenteil
-# Omer Schwartz 201234002
+# Omer Schwartz
 
 """
 
@@ -82,30 +84,12 @@ def var(img):
 # ------------------------------------------------------------------------------
 
 
-class Classifier:
-    def __init__(self, classifier):
-        self.classifier = classifier
-        self.classification = 0
-        self.array = []
-
-    def fit(self, learn_set, target):
-        zeros = []
-        ones = []
-        for i, j in zip(learn_set, target):
-            pixel_list = np.ndarray.tolist(i)
-            if j == 0:
-                zeros.append(self.classifier(pixel_list))
-            else:
-                ones.append(self.classifier(pixel_list))
-        self.classification = (statistics.mean(ones) + statistics.mean(
-            zeros)) / 2
-
-    def predict(self, test_set):
-        ima = []
-        for i in test_set:
-            pixel_list = np.ndarray.tolist(i)
-            ima.append(self.classifier(pixel_list))
-        return ima
+def classify(classifier, test_set):
+    ima = []
+    for i in test_set:
+        pixel_list = np.ndarray.tolist(i)
+        ima.append(classifier(pixel_list))
+    return ima
 
 
 # ------------------------------------------------------------------------------
@@ -113,11 +97,11 @@ indices_0_1 = np.where(np.logical_and(digits.target >= 0, digits.target <= 1))
 n_samples = len(digits.images[indices_0_1])
 data = digits.images[indices_0_1].reshape((360, -1))
 
-predicted_a = Classifier(circle_finder).predict(data)
-predicted_b = Classifier(modulus).predict(data)
-predicted_c = Classifier(center_values).predict(data)
-predicted_d = Classifier(num_of_zeros).predict(data)
-predicted_e = Classifier(var).predict(data)
+circle_finder_arr = classify(circle_finder, data)
+modulus_arr = classify(modulus, data)
+center_values_arr = classify(center_values, data)
+num_of_zeros_arr = classify(num_of_zeros, data)
+var_arr = classify(var, data)
 
 fig = plt.figure()
 ax = Axes3D(fig)
@@ -125,13 +109,12 @@ fig.suptitle("num_of_zeros, circle_finder, center_values")
 ax.set_xlabel('num_of_zeros')
 ax.set_ylabel('circle_finder')
 ax.set_zlabel('center_values')
-ax.scatter(predicted_a, predicted_b, predicted_d, c=digits.target[indices_0_1],
+ax.scatter(circle_finder_arr, modulus_arr, center_values_arr, c=digits.target[indices_0_1],
            cmap=plt.cm.Set1, edgecolor='k', s=30)
 plt.show()
 
 # creating the X (feature)
-X = np.column_stack(
-    (predicted_a, predicted_b, predicted_c, predicted_d, predicted_e))
+X = np.column_stack((circle_finder_arr, modulus_arr, center_values_arr, num_of_zeros_arr))
 # scaling the values for better classification performance
 X_scaled = preprocessing.scale(X)
 # the predicted outputs
