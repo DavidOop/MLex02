@@ -26,7 +26,7 @@ digits = datasets.load_digits()
 
 
 # ******************************************************************************
-# ------------------------------- Our Classifiers ------------------------------
+# ------------------------------- 21 Our Classifiers ------------------------------
 
 
 def center_values(img):
@@ -90,7 +90,7 @@ def classify(classifier, test_set):
     return ima
 
 
-# ------------------------------------------------------------------------------
+# -------------------------------- 21e 3D figure ----------------------------------------
 indices_0_1 = np.where(np.logical_and(digits.target >= 0, digits.target <= 1))
 n_samples = len(digits.images[indices_0_1])
 data = digits.images[indices_0_1].reshape((360, -1))
@@ -109,7 +109,11 @@ ax.set_ylabel('circle_finder')
 ax.set_zlabel('center_values')
 ax.scatter(circle_finder_arr, modulus_arr, center_values_arr, c=digits.target[indices_0_1],
            cmap=plt.cm.Set1, edgecolor='k', s=30)
-plt.show()
+# plt.show()
+
+
+# ------------------------------ 21 f  Logistic Classifier -----------------------------------------------------------
+
 
 # creating the X (feature)
 X = np.column_stack((circle_finder_arr, modulus_arr, center_values_arr, num_of_zeros_arr))
@@ -135,10 +139,13 @@ print(
     "\n%s\n" % (metrics.classification_report(expected, predicted2)))
 print("Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted2))
 
+
+# ---------------------------------------------- 21 g -----------------------------------------------------------
+
 ima = []
 classi = (np.mean(circle_finder_arr[:180]) + np.mean(modulus_arr[:180]) + np.mean(center_values_arr[:180])) / 3
-for i, j , k in zip(circle_finder_arr[180:], modulus_arr[180:], center_values_arr[180:]):
-    if classi > (i + k +j)/3:
+for i, j, k in zip(circle_finder_arr[180:], modulus_arr[180:], center_values_arr[180:]):
+    if classi < (i + k + j)/3:
         ima.append(0)
     else:
         ima.append(1)
