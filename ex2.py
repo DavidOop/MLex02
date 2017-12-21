@@ -32,9 +32,9 @@ classifier.fit(data[:n_samples // 2], digits.target[:n_samples // 2])
 # Now predict the value of the digit on the second half:
 expected = digits.target[n_samples // 2:]
 predicted = classifier.predict(data[n_samples // 2:])
-print("Classification report for classifier %s:\n%s\n"
-      % (classifier, metrics.classification_report(expected, predicted)))
-print("Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted))
+# print("Classification report for classifier %s:\n%s\n"
+#       % (classifier, metrics.classification_report(expected, predicted)))
+# print("Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted))
 wrong_predict = []
 for i in range(len(expected)):
     if expected[i] != predicted[i]:
@@ -45,7 +45,7 @@ for index, (i, j, image) in enumerate(wrong_predict):
     plt.axis('off')
     plt.imshow(image, cmap=plt.cm.gray_r, interpolation='nearest')
     plt.title('%i %i' % (i, j))
-plt.show()
+# plt.show()
 # *****************************************************************************************************************
 # ------------------------------- 21 Our Classifiers --------------------------------------------------------------
 
@@ -157,15 +157,13 @@ var_arr = classify(var, data)
 fig = plt.figure()
 ax = Axes3D(fig)
 fig.suptitle("num_of_zeros, circle_finder, center_values")
-ax.set_xlabel('num_of_zeros')
+ax.set_xlabel('Circle Finder')
 ax.set_ylabel('circle_finder')
 ax.set_zlabel('center_values')
 ax.scatter(circle_finder_arr, modulus_arr, center_values_arr, c=digits.target[indices_0_1],
            cmap=plt.cm.Set1, edgecolor='k', s=30)
-# plt.show()
-
-
-# ------------------------------ 21 f  Logistic Classifier -----------------------------------------------------------
+plt.show()
+# ------------------------------ 21f  Logistic Classifier -----------------------------------------------------------
 
 
 # creating the X (feature)
@@ -194,11 +192,11 @@ print("Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted2))
 
 
 # ---------------------------------------------- 21g -----------------------------------------------------------
-
 ima = []
-classi = np.mean(var_arr[:180])
-for i in var_arr[180:]:
-    if classi > i:
+classi = (np.mean(circle_finder_arr[:180]) + np.mean(modulus_arr[:180]) + np.mean(center_values_arr[:180]))/3
+print(classi)
+for i, j ,k in zip(circle_finder_arr[180:], modulus_arr[180:], center_values_arr[180:]):
+    if classi > (i + j + k)/3:
         ima.append(0)
     else:
         ima.append(1)
@@ -209,3 +207,32 @@ print(
 print("Confusion matrix:\n%s" % metrics.confusion_matrix( digits.target[indices_0_1][n_samples // 2:], ima))
 
 # ---------------------------------------------- 21h -----------------------------------------------------------
+ima = []
+n_samples = len(digits.images)
+data = digits.images.reshape((n_samples, -1))
+mat = [[]] * 10
+
+
+for i, j in zip(data[:n_samples // 2], digits.target[:n_samples // 2]):
+    pixel_list = np.ndarray.tolist(i)
+    mat[j].append(modulus(pixel_list))
+
+sum_arr = []
+for i in mat:
+    # print(i)
+    sum_arr.append(np.mean(i))
+
+predict_mat = []
+
+for i in data[n_samples // 2:]:
+    pixel_list = np.ndarray.tolist(i)
+    n = [abs(j - pixel_list) for j in sum_arr]
+    print(n[1])
+    # n[1] is a list of lists
+    predict_mat.append()
+
+print(
+    "num_of_zeros_arr features:"
+    "\n%s\n" % (metrics.classification_report( digits.target[n_samples // 2:], predict_mat)))
+print("Confusion matrix:\n%s" % metrics.confusion_matrix( digits.target[n_samples // 2:], predict_mat))
+
