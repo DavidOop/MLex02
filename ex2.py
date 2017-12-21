@@ -52,18 +52,28 @@ plt.show()
 
 def center_values(img):
     """
+    Confusion matrix:
+    [[88  0]
+    [10 82]]
 
     :param img:
     :return:
     """
     return img[19] + img[27] + img[35] + img[43] + img[20] + img[28] + img[36] \
-           + img[44]
+            + img[44]
 
 
 # ------------------------------------------------------------------------------
 
 
 def num_of_zeros(img):
+    """
+    Confusion matrix:
+    [[65 23]
+    [ 10 82]]
+    :param img:
+    :return:
+    """
     return img.count(0.0)
 
 
@@ -71,6 +81,14 @@ def num_of_zeros(img):
 
 
 def modulus(img):
+    """
+    Confusion matrix:
+    [[85  3]
+    [ 4 88]]
+
+    :param img:
+    :return:
+    """
     a = []
     for i in img:
         a.append(-(int(i) % 16))
@@ -81,6 +99,13 @@ def modulus(img):
 
 
 def circle_finder(img):
+    """
+    Confusion matrix:
+    [[88  0]
+    [ 1 91]]
+    :param img:
+    :return:
+    """
     c = 0
     flag = False
     for i in img[32:]:
@@ -97,6 +122,13 @@ def circle_finder(img):
 
 
 def var(img):
+    """
+    Confusion matrix:
+    [[78 10]
+    [ 24 68]]
+    :param img:
+    :return:
+    """
     return np.var(img)
 
 
@@ -161,17 +193,19 @@ print(
 print("Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted2))
 
 
-# ---------------------------------------------- 21 g -----------------------------------------------------------
+# ---------------------------------------------- 21g -----------------------------------------------------------
 
 ima = []
-classi = (np.mean(circle_finder_arr[:180]) + np.mean(modulus_arr[:180]) + np.mean(center_values_arr[:180])) / 3
-for i, j, k in zip(circle_finder_arr[180:], modulus_arr[180:], center_values_arr[180:]):
-    if classi < (i + k + j)/3:
+classi = np.mean(var_arr[:180])
+for i in var_arr[180:]:
+    if classi > i:
         ima.append(0)
     else:
         ima.append(1)
 
 print(
-    "Logistic regression using [featureA, featureB] features cross validation:"
+    "num_of_zeros_arr features:"
     "\n%s\n" % (metrics.classification_report( digits.target[indices_0_1][n_samples // 2:], ima)))
 print("Confusion matrix:\n%s" % metrics.confusion_matrix( digits.target[indices_0_1][n_samples // 2:], ima))
+
+# ---------------------------------------------- 21h -----------------------------------------------------------
