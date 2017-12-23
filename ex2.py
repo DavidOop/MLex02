@@ -15,7 +15,7 @@ from sklearn.model_selection import cross_val_predict
 # ******************************************************************************
 # -------------------- Import the database ----------------------
 
-# The digits dataset
+# The digits data set
 digits = datasets.load_digits()
 
 
@@ -170,7 +170,7 @@ def q21():
     modulus_arr = classify(modulus, data)
     center_values_arr = classify(center_values, data)
     num_of_zeros_arr = classify(num_of_zeros, data)
-    var_arr = classify(var, data)
+    # var_arr = classify(var, data)
 
     fig = plt.figure()
     ax = Axes3D(fig)
@@ -186,17 +186,17 @@ def q21():
     # ------------------- 21f  Logistic Classifier ---------------
 
     # creating the X (feature)
-    X = np.column_stack((circle_finder_arr, modulus_arr, center_values_arr,
+    x = np.column_stack((circle_finder_arr, modulus_arr, center_values_arr,
                          num_of_zeros_arr))
     # scaling the values for better classification performance
-    X_scaled = preprocessing.scale(X)
+    x_scaled = preprocessing.scale(x)
     # the predicted outputs
-    Y = digits.target[indices_0_1]  # Training Logistic regression
+    y = digits.target[indices_0_1]  # Training Logistic regression
     logistic_classifier = linear_model.LogisticRegression()
-    logistic_classifier.fit(X_scaled, Y)
+    logistic_classifier.fit(x_scaled, y)
     # show how good is the classifier on the training data
-    expected = Y
-    predicted = logistic_classifier.predict(X_scaled)
+    expected = y
+    predicted = logistic_classifier.predict(x_scaled)
 
     print("Logistic regression using Circle Finder, Modulus, "
           "Center Values, Number of Zeros features:\n%s\n" %
@@ -204,7 +204,7 @@ def q21():
     print(
         "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted))
     # estimate the generalization performance using cross validation
-    predicted2 = cross_val_predict(logistic_classifier, X_scaled, Y, cv=10)
+    predicted2 = cross_val_predict(logistic_classifier, x_scaled, y, cv=10)
     print(
         "Logistic regression using Circle Finder, Modulus, "
         "Center Values, Number of Zeros features with cross validation:"
@@ -218,27 +218,28 @@ def q21():
         def __init__(self):
             self.fit_zero = 0
             self.fit_one = 0
-            self.zero = lambda x: abs(self.fit_one - x) < abs(self.fit_zero - x)
+            self.zero = lambda num: \
+                abs(self.fit_one - num) < abs(self.fit_zero - num)
 
         def fit(self, properties, targets):
             zero = []
             one = []
-            for i, j in zip(properties, targets):
-                if j:
-                    zero.append(i)
+            for property_i, target in zip(properties, targets):
+                if target:
+                    zero.append(property_i)
                 else:
-                    one.append(i)
+                    one.append(property_i)
             self.fit_zero = np.mean(zero)
             self.fit_one = np.mean(one)
 
         def predict(self, properties):
-            predicted = []
-            for i in properties:
-                if self.zero(i):
-                    predicted.append(0)
+            prediction_result = []
+            for property_i in properties:
+                if self.zero(property_i):
+                    prediction_result.append(0)
                 else:
-                    predicted.append(1)
-            return predicted
+                    prediction_result.append(1)
+            return prediction_result
 
     # ------------------------- 21g ---------------------------
     ima = []
