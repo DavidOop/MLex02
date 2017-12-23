@@ -46,7 +46,7 @@ for index, (i, j, image) in enumerate(wrong_predict):
     plt.axis('off')
     plt.imshow(image, cmap=plt.cm.gray_r, interpolation='nearest')
     plt.title('%i %i' % (i, j))
-# plt.show()
+plt.show()
 # ******************************************************************************
 # ------------------------------- 21 Our Classifiers ---------------------------
 
@@ -195,54 +195,75 @@ print("Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted2))
 
 
 # ---------------------------------------------- 21g ---------------------------
-ima = []
-classi = (np.mean(circle_finder_arr[:180]) + np.mean(modulus_arr[:180])
-          + np.mean(center_values_arr[:180]))/3
-print(classi)
-for i, j, k in zip(circle_finder_arr[180:], modulus_arr[180:],
-                   center_values_arr[180:]):
-    if classi > (i + j + k)/3:
-        ima.append(0)
-    else:
-        ima.append(1)
 
+
+class Classifier:
+    def __init__(self):
+        self.fit_zero = 0
+        self.fit_one = 0
+        self.zero = lambda x: abs(self.fit_one - x) < abs(self.fit_zero - x)
+
+    def fit(self, properties, targets):
+        zero = []
+        one = []
+        for i, j in zip(properties, targets):
+            if j:
+                zero.append(i)
+            else:
+                one.append(i)
+        self.fit_zero = np.mean(zero)
+        self.fit_one = np.mean(one)
+
+    def predict(self, properties):
+        predicted = []
+        for i in properties:
+            if self.zero(i):
+                predicted.append(0)
+            else:
+                predicted.append(1)
+        return predicted
+
+
+classifier = Classifier()
+classifier.fit(circle_finder_arr[:n_samples // 2], digits.target[indices_0_1][:n_samples // 2])
+predicted = classifier.predict(circle_finder_arr[n_samples // 2:])
 print(
     "num_of_zeros_arr features:"
     "\n%s\n" %
     (metrics.classification_report(
-        digits.target[indices_0_1][n_samples // 2:], ima)))
+        digits.target[indices_0_1][n_samples // 2:], predicted)))
 print("Confusion matrix:\n%s" % metrics.confusion_matrix(
-    digits.target[indices_0_1][n_samples // 2:], ima))
+    digits.target[indices_0_1][n_samples // 2:], predicted))
 
 # ---------------------------------------------- 21h ---------------------------
-ima = []
-n_samples = len(digits.images)
-data = digits.images.reshape((n_samples, -1))
-mat = [[]] * 10
+# ima = []
+# n_samples = len(digits.images)
+# data = digits.images.reshape((n_samples, -1))
+# mat = [[]] * 10
+#
+#
+# for i, j in zip(data[:n_samples // 2], digits.target[:n_samples // 2]):
+#     pixel_list = np.ndarray.tolist(i)
+#     mat[j].append(modulus(pixel_list))
+#
+# sum_arr = []
+# for i in mat:
+#     # print(i)
+#     sum_arr.append(np.mean(i))
+#
+# predict_mat = []
+#
+# for i in data[n_samples // 2:]:
+#     pixel_list = np.ndarray.tolist(i)
+#     n = [abs(j - pixel_list) for j in sum_arr]
+#     print(n[1])
+#     # n[1] is a list of lists
+#     predict_mat.append()
 
-
-for i, j in zip(data[:n_samples // 2], digits.target[:n_samples // 2]):
-    pixel_list = np.ndarray.tolist(i)
-    mat[j].append(modulus(pixel_list))
-
-sum_arr = []
-for i in mat:
-    # print(i)
-    sum_arr.append(np.mean(i))
-
-predict_mat = []
-
-for i in data[n_samples // 2:]:
-    pixel_list = np.ndarray.tolist(i)
-    n = [abs(j - pixel_list) for j in sum_arr]
-    print(n[1])
-    # n[1] is a list of lists
-    predict_mat.append()
-
-print(
-    "num_of_zeros_arr features:"
-    "\n%s\n" % (metrics.classification_report(
-        digits.target[n_samples // 2:], predict_mat)))
-print("Confusion matrix:\n%s" % metrics.confusion_matrix(
-    digits.target[n_samples // 2:], predict_mat))
+# print(
+#     "num_of_zeros_arr features:"
+#     "\n%s\n" % (metrics.classification_report(
+#         digits.target[n_samples // 2:], predict_mat)))
+# print("Confusion matrix:\n%s" % metrics.confusion_matrix(
+#     digits.target[n_samples // 2:], predict_mat))
 

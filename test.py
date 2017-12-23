@@ -142,7 +142,13 @@ print("Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted2))
 
 # ---------------------------------------------- 21 g -----------------------------------------------------------
 
+
+
+
 ima = []
+zero = []
+one = []
+
 classi = (np.mean(circle_finder_arr[:180]) + np.mean(modulus_arr[:180]) + np.mean(center_values_arr[:180])) / 3
 for i, j, k in zip(circle_finder_arr[180:], modulus_arr[180:], center_values_arr[180:]):
     if classi < (i + k + j)/3:
