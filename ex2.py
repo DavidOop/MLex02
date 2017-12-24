@@ -54,11 +54,11 @@ def q20():
         plt.axis('off')
         plt.imshow(image, cmap=plt.cm.gray_r, interpolation='nearest')
         plt.title('%i %i' % (expectation, prediction))
-    plt.show()
+    # plt.show()
 
 
 # ******************************************************************************
-# ------------------------------- Question 21 Our Properties ---------------------------
+# ------------------------------- Question 21 Our Features ---------------------------
 
 def center_values(img):
     """
@@ -146,16 +146,14 @@ def var(img):
     :return:
     """
     return np.var(img)
-
-
 # ------------------------------------------------------------------------------
 
 
-def properties(Property, test_set):
+def properties(features, test_set):
     ima = []
     for i in test_set:
         pixel_list = np.ndarray.tolist(i)
-        ima.append(Property(pixel_list))
+        ima.append(features(pixel_list))
     return ima
 
 
@@ -164,30 +162,30 @@ def q21():
     indices_0_1 = np.where(
         np.logical_and(digits.target >= 0, digits.target <= 1))
     n_samples = len(digits.images[indices_0_1])
-    data = digits.images[indices_0_1].reshape((360, -1))
+    data = digits.images[indices_0_1].reshape((n_samples, -1))
 
     circle_finder_arr = properties(circle_finder, data)
     modulus_arr = properties(modulus, data)
     center_values_arr = properties(center_values, data)
     num_of_zeros_arr = properties(num_of_zeros, data)
-    # var_arr = properties(var, data)
+    var_arr = properties(var, data)
 
     fig = plt.figure()
     ax = Axes3D(fig)
-    fig.suptitle("num_of_zeros, circle_finder, center_values")
-    ax.set_xlabel('Circle Finder')
-    ax.set_ylabel('circle_finder')
-    ax.set_zlabel('center_values')
-    ax.scatter(circle_finder_arr, modulus_arr, center_values_arr,
+    fig.suptitle("Using Predictors: Variance, Center Values, Modulus")
+    ax.set_xlabel('Variance')
+    ax.set_ylabel('Center Values')
+    ax.set_zlabel('Modulus')
+    ax.scatter(var_arr, center_values_arr, modulus_arr,
                c=digits.target[indices_0_1],
                cmap=plt.cm.Set1, edgecolor='k', s=30)
     plt.show()
 
-    # ------------------- Question 21f  Logistic Classifier ---------------
+    # ------------------- Question 21f  Logistic Classifier on all features ---------------
 
     # creating the X (feature)
     x = np.column_stack((circle_finder_arr, modulus_arr, center_values_arr,
-                         num_of_zeros_arr))
+                         num_of_zeros_arr, var_arr))
     # scaling the values for better classification performance
     x_scaled = preprocessing.scale(x)
     # the predicted outputs
@@ -199,7 +197,7 @@ def q21():
     predicted = logistic_classifier.predict(x_scaled)
 
     print("Logistic regression using Circle Finder, Modulus, "
-          "Center Values, Number of Zeros features:\n%s\n" %
+          "Center Values, Number of Zeros, Variance features:\n%s\n" %
           (metrics.classification_report(expected, predicted)))
     print(
         "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted))
@@ -207,82 +205,64 @@ def q21():
     predicted2 = cross_val_predict(logistic_classifier, x_scaled, y, cv=10)
     print(
         "Logistic regression using Circle Finder, Modulus, "
-        "Center Values, Number of Zeros features with cross validation:"
+        "Center Values, Number of Zeros, Variance features with cross validation:"
         "\n%s\n" % (metrics.classification_report(expected, predicted2)))
     print("Confusion matrix:\n%s" % metrics.confusion_matrix(expected,
                                                              predicted2))
 
-    # ----------------------- Question 21g ---------------------------
-
-    class Classifier:
-        def __init__(self):
-            self.fit_zero = 0
-            self.fit_one = 0
-            self.classifier = lambda num: \
-                abs(self.fit_one - num) >= abs(self.fit_zero - num)
-
-        def fit(self, properties, targets):
-            zero = []
-            one = []
-            for property_i, target in zip(properties, targets):
-                if target:
-                    zero.append(property_i)
-                else:
-                    one.append(property_i)
-            self.fit_zero = np.mean(zero)
-            self.fit_one = np.mean(one)
-
-        def predict(self, properties):
-            prediction_result = []
-            for property_i in properties:
-                prediction_result.append(self.classifier(property_i))
-            return prediction_result
-
     # ------------------------- Question 21g ---------------------------
-    classifier = Classifier()
-    classifier.fit(circle_finder_arr[:n_samples // 2],
-                   digits.target[indices_0_1][:n_samples // 2])
-    predicted = classifier.predict(circle_finder_arr[n_samples // 2:])
-    print(
-        "num_of_zeros_arr features:"
-        "\n%s\n" %
-        (metrics.classification_report(
-            digits.target[indices_0_1][n_samples // 2:], predicted)))
-    print("Confusion matrix:\n%s" % metrics.confusion_matrix(
-        digits.target[indices_0_1][n_samples // 2:], predicted))
+    # -------------------------------------------------------------------------
+    # creating the X (feature)
+    x = np.column_stack((circle_finder_arr, center_values_arr ,modulus_arr,  num_of_zeros_arr, var_arr))
+    # scaling the values for better classification performance
+    x_scaled = preprocessing.scale(x)
+    # the predicted outputs
+    y = digits.target[indices_0_1]  # Training Logistic regression
+    logistic_classifier = linear_model.LogisticRegression()
+    logistic_classifier.fit(x_scaled, y)
+    # show how good is the classifier on the training data
+    expected = y
+    predicted = logistic_classifier.predict(x_scaled)
 
+    print("Logistic regression using Circle Finder, Modulus, "
+          "Center Values, Number of Zeros, Variance features:\n%s\n" %
+          (metrics.classification_report(expected, predicted)))
+    print(
+        "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted))
     # ---------------------------- Question 21h ---------------------------
-    # ima = []
+    #
     # n_samples = len(digits.images)
     # data = digits.images.reshape((n_samples, -1))
-    # mat = [[]] * 10
+    # circle_finder_arr = properties(summ, data)
+    # modulus_arr = properties(var_maen, data)
+    # center_values_arr = properties(center_values, data)
+    # num_of_zeros_arr = properties(num_of_zeros, data)
+    # var_arr = properties(var, data)
+    # a = properties(modulus, data)
+    # b = properties(circle_finder, data)
+    # conv_arr = properties(conv, data)
     #
     #
-    # for i, j in zip(data[:n_samples // 2], digits.target[:n_samples // 2]):
-    #     pixel_list = np.ndarray.tolist(i)
-    #     mat[j].append(modulus(pixel_list))
     #
-    # sum_arr = []
-    # for i in mat:
-    #     # print(i)
-    #     sum_arr.append(np.mean(i))
+    # x = np.column_stack((conv_arr, center_values_arr, num_of_zeros_arr, var_arr, modulus_arr, a, b))
+    # # scaling the values for better classification performance
+    # x_scaled = preprocessing.scale(x)
     #
-    # predict_mat = []
+    # # the predicted outputs
+    # y = digits.target  # Training Logistic regression
+    # logistic_classifier = linear_model.LogisticRegression()
+    # logistic_classifier.fit(x_scaled, y)
+    # # show how good is the classifier on the training data
+    # expected = y
+    # predicted = logistic_classifier.predict(x_scaled)
     #
-    # for i in data[n_samples // 2:]:
-    #     pixel_list = np.ndarray.tolist(i)
-    #     n = [abs(j - pixel_list) for j in sum_arr]
-    #     print(n[1])
-    #     # n[1] is a list of lists
-    #     predict_mat.append()
-
+    # print("Logistic regression using Circle Finder, "
+    #       "Modulus, Center Values features:\n%s\n" %
+    #       (metrics.classification_report(expected, predicted)))
     # print(
-    #     "num_of_zeros_arr features:"
-    #     "\n%s\n" % (metrics.classification_report(
-    #         digits.target[n_samples // 2:], predict_mat)))
-    # print("Confusion matrix:\n%s" % metrics.confusion_matrix(
-    #     digits.target[n_samples // 2:], predict_mat))
-
+    #     "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted))
+    # # estimate the generalization performance using cross validation
+    # predicted2 = cross_val_predict(logistic_classifier, x_scaled, y, cv=10)
 
 q20()
 q21()
