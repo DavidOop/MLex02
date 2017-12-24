@@ -58,7 +58,7 @@ def q20():
 
 
 # ******************************************************************************
-# ------------------------------- 21 Our Classifiers ---------------------------
+# ------------------------------- Question 21 Our Properties ---------------------------
 
 def center_values(img):
     """
@@ -151,26 +151,26 @@ def var(img):
 # ------------------------------------------------------------------------------
 
 
-def classify(classifier, test_set):
+def properties(Property, test_set):
     ima = []
     for i in test_set:
         pixel_list = np.ndarray.tolist(i)
-        ima.append(classifier(pixel_list))
+        ima.append(Property(pixel_list))
     return ima
 
 
-# -------------------------------- 21e 3D figure -------------------------------
+# -------------------------------- Question 21e 3D figure -------------------------------
 def q21():
     indices_0_1 = np.where(
         np.logical_and(digits.target >= 0, digits.target <= 1))
     n_samples = len(digits.images[indices_0_1])
     data = digits.images[indices_0_1].reshape((360, -1))
 
-    circle_finder_arr = classify(circle_finder, data)
-    modulus_arr = classify(modulus, data)
-    center_values_arr = classify(center_values, data)
-    num_of_zeros_arr = classify(num_of_zeros, data)
-    # var_arr = classify(var, data)
+    circle_finder_arr = properties(circle_finder, data)
+    modulus_arr = properties(modulus, data)
+    center_values_arr = properties(center_values, data)
+    num_of_zeros_arr = properties(num_of_zeros, data)
+    # var_arr = properties(var, data)
 
     fig = plt.figure()
     ax = Axes3D(fig)
@@ -183,7 +183,7 @@ def q21():
                cmap=plt.cm.Set1, edgecolor='k', s=30)
     plt.show()
 
-    # ------------------- 21f  Logistic Classifier ---------------
+    # ------------------- Question 21f  Logistic Classifier ---------------
 
     # creating the X (feature)
     x = np.column_stack((circle_finder_arr, modulus_arr, center_values_arr,
@@ -212,14 +212,14 @@ def q21():
     print("Confusion matrix:\n%s" % metrics.confusion_matrix(expected,
                                                              predicted2))
 
-    # ---------------------------- 21g ---------------------------
+    # ----------------------- Question 21g ---------------------------
 
     class Classifier:
         def __init__(self):
             self.fit_zero = 0
             self.fit_one = 0
-            self.zero = lambda num: \
-                abs(self.fit_one - num) < abs(self.fit_zero - num)
+            self.classifier = lambda num: \
+                abs(self.fit_one - num) >= abs(self.fit_zero - num)
 
         def fit(self, properties, targets):
             zero = []
@@ -235,24 +235,10 @@ def q21():
         def predict(self, properties):
             prediction_result = []
             for property_i in properties:
-                if self.zero(property_i):
-                    prediction_result.append(0)
-                else:
-                    prediction_result.append(1)
+                prediction_result.append(self.classifier(property_i))
             return prediction_result
 
-    # ------------------------- 21g ---------------------------
-    ima = []
-    classy = (np.mean(circle_finder_arr[:180]) + np.mean(modulus_arr[:180])
-              + np.mean(center_values_arr[:180])) / 3
-    print(classy)
-    for i, j, k in zip(circle_finder_arr[180:], modulus_arr[180:],
-                       center_values_arr[180:]):
-        if classy > (i + j + k) / 3:
-            ima.append(0)
-        else:
-            ima.append(1)
-
+    # ------------------------- Question 21g ---------------------------
     classifier = Classifier()
     classifier.fit(circle_finder_arr[:n_samples // 2],
                    digits.target[indices_0_1][:n_samples // 2])
@@ -264,15 +250,8 @@ def q21():
             digits.target[indices_0_1][n_samples // 2:], predicted)))
     print("Confusion matrix:\n%s" % metrics.confusion_matrix(
         digits.target[indices_0_1][n_samples // 2:], predicted))
-    print(
-        "num_of_zeros_arr features:"
-        "\n%s\n" %
-        (metrics.classification_report(
-            digits.target[indices_0_1][n_samples // 2:], ima)))
-    print("Confusion matrix:\n%s" % metrics.confusion_matrix(
-        digits.target[indices_0_1][n_samples // 2:], ima))
 
-    # ---------------------------- 21h ---------------------------
+    # ---------------------------- Question 21h ---------------------------
     # ima = []
     # n_samples = len(digits.images)
     # data = digits.images.reshape((n_samples, -1))
@@ -303,7 +282,6 @@ def q21():
     #         digits.target[n_samples // 2:], predict_mat)))
     # print("Confusion matrix:\n%s" % metrics.confusion_matrix(
     #     digits.target[n_samples // 2:], predict_mat))
-    # ------------------------- 21h ---------------------------
 
 
 q20()
