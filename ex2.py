@@ -57,7 +57,7 @@ def q20():
     # plt.show()
 
 
-# ******************************************************************************
+# ***********************************************************************************
 # ------------------------------- Question 21 Our Features ---------------------------
 
 def center_values(img):
@@ -68,8 +68,8 @@ def center_values(img):
     [[88  0]
     [10 82]]
 
-    :param img: the 8x8 pixel matrix as a list:
-    :return sum of 2 middle columns:
+    :param img: The 8x8 pixel matrix as a list:
+    :return Sum of 2 middle columns:
     """
     return img[19] + img[27] + img[35] + img[43] + img[20] + img[28] + img[36] \
            + img[44]
@@ -85,7 +85,8 @@ def num_of_zeros(img):
     Confusion matrix:
     [[65 23]
     [ 10 82]]
-    :param img: the 8x8 pixel matrix as a list:
+
+    :param img: The 8x8 pixel matrix as a list:
     :return: the amount of zero pixels in the image
     """
     return img.count(0.0)
@@ -96,19 +97,16 @@ def num_of_zeros(img):
 
 def modulus(img):
     """
-    Remove all black
+    Remove all black(darkest spots of the image)
 
     Confusion matrix:
     [[85  3]
     [ 4 88]]
 
-    :param img:
-    :return:
+    :param img: The 8x8 pixel matrix as a list
+    :return: Sum of the image without calculating 16
     """
-    a = []
-    for i in img:
-        a.append(-(int(i) % 16))
-    return sum(a)
+    return sum([-(int(i) % 16) for i in img])
 
 
 # ------------------------------------------------------------------------------
@@ -116,6 +114,7 @@ def modulus(img):
 
 def circle_finder(img):
     """
+
     Confusion matrix:
     [[88  0]
     [ 1 91]]
@@ -139,25 +138,33 @@ def circle_finder(img):
 
 def var(img):
     """
+    Variance of the image values
+
     Confusion matrix:
     [[78 10]
     [ 24 68]]
-    :param img:
-    :return:
+
+    :param img: The 8x8 pixel matrix as a list:
+    :return: The variance
     """
     return np.var(img)
-# ------------------------------------------------------------------------------
+# --------------------- End of features ---------------------------------------------
+# -----------------------------------------------------------------------------------
 
 
 def properties(features, test_set):
-    ima = []
-    for i in test_set:
-        pixel_list = np.ndarray.tolist(i)
-        ima.append(features(pixel_list))
-    return ima
+    """
+    Receives all images, converts each image from a 8x8 pixel matrix
+    to list and sends the list to the right feature
 
-
+    :param features: The feature method
+    :param test_set: Array with all images
+    :return: Array that each cell has the value of the image according the feature
+    """
+    return [features(np.ndarray.tolist(i)) for i in test_set]
 # -------------------------------- Question 21e 3D figure -------------------------------
+
+
 def q21():
     indices_0_1 = np.where(
         np.logical_and(digits.target >= 0, digits.target <= 1))
@@ -181,7 +188,7 @@ def q21():
                cmap=plt.cm.Set1, edgecolor='k', s=30)
     plt.show()
 
-    # ------------------- Question 21f  Logistic Classifier on all features ---------------
+    # ------------------- Question 21f Logistic Classifier on all features ---------------
 
     # creating the X (feature)
     x = np.column_stack((circle_finder_arr, modulus_arr, center_values_arr,
@@ -210,9 +217,8 @@ def q21():
     print("Confusion matrix:\n%s" % metrics.confusion_matrix(expected,
                                                              predicted2))
 
-    # ------------------------- Question 21g ---------------------------
-    # -------------------------------------------------------------------------
-    # creating the X (feature)
+    # ------------------------- Question 21g Logistic Classifier- best features ---------------------------
+    # creating the X
     x = np.column_stack((circle_finder_arr, center_values_arr ,modulus_arr,  num_of_zeros_arr, var_arr))
     # scaling the values for better classification performance
     x_scaled = preprocessing.scale(x)
