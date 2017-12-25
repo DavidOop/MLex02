@@ -22,36 +22,25 @@ digits = datasets.load_digits()
 
 
 def var(img):
-    return np.var(img)
+    return np.var(img) * sum(img)
 def tf(d):
-    return np.var(d[:4])
+    return np.var([sum(i) for i in d[:4]]) * sum(d[:4])
 def bf(d):
-    return np.var(d[4:])
+    return np.var([sum(i) for i in d[4:]]) * sum(d[4:])
 def lf(d):
-    return np.var(d[:, :4])
+    return np.var([sum(i) for i in d[:, :4]]) * sum(d[:, :4])
 def rf(d):
-    return np.var(d[:, 4:])
+    return np.var([sum(i) for i in d[:, 4:]]) * sum(d[:, 4:])
 def trf(d):
-    return np.var(d[:4, 4:])
-def tlf(d):
-    return np.var(d[:4, :4])
-def brf(d):
-    return np.var(d[4:, 4:])
-def blf(d):
-    return np.var(d[4:, :4])
+    return np.var([sum(i) for i in d[:4, 4:]]) * sum(d[:4, 4:]) + \
+        np.var([sum(i) for i in d[:4, :4]]) * sum(d[:4, :4]) + \
+        np.var([sum(i) for i in d[4:, :4]]) * sum(d[4:, :4]) + \
+        np.var([sum(i) for i in d[4:, 4:]]) * sum(d[4:, 4:])
+def cf(d):
+    return np.var([sum(i) for i in d[2:-2, 2:-2]]) * sum(d[2:-2, 2:-2])
 def srvf(d):
-    return np.var([np.mean(i) for i in d])
-def maxf(d):
-    return max(np.var(d[:4, 4:]), np.var(d[:4, :4]), np.var(d[4:, 4:]), np.var(d[4:, :4]))
-def vbf(d):
-    s = []
-    for i in d:
-        for j in i:
-            if j >= 5:
-                s.append(80)
-            else:
-                s.append(0)
-    return np.var(s)
+    return np.var([sum(i) for i in d]) * sum(d)
+
 
 
 n_samples = len(digits.images)
@@ -62,6 +51,7 @@ t = []
 b = []
 l = []
 r = []
+c = []
 tr = []
 tl = []
 br = []
@@ -75,16 +65,12 @@ for i in data:
     b.append(bf(i))
     l.append(lf(i))
     r.append(rf(i))
+    c.append(cf(i))
     tr.append(trf(i))
-    tl.append(tlf(i))
-    br.append(brf(i))
-    bl.append(blf(i))
     srv.append(srvf(i))
-    vb.append(vbf(i))
-    max_a.append(maxf(i))
 
 
-x = np.column_stack((v, t, b, l, r, tr, tl, br, bl, srv, vb, max_a))
+x = np.column_stack((v, t, b, r, l, c, tr, srv))
 # scaling the values for better classification performance
 x_scaled = preprocessing.scale(x)
 
