@@ -5,7 +5,6 @@ __author2__ = 'omersc'
 
 import matplotlib.pyplot as plt
 import numpy as np
-# Standard scientific Python imports
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn import datasets, svm, metrics
 from sklearn import linear_model
@@ -19,6 +18,8 @@ from sklearn.model_selection import cross_val_predict
 digits = datasets.load_digits()
 # ******************************************************************************
 # ------------------------------ Question 20 -----------------------------------
+
+
 def q20():
     # To apply a classifier on this data, we need to flatten the image, to
     # turn the data in a (samples, feature) matrix:
@@ -75,7 +76,7 @@ def center_values(img):
     :return Sum of 2 middle columns:
     """
     return img[19] + img[27] + img[35] + img[43] + img[20] + img[28] + img[36] \
-           + img[44]
+        + img[44]
 
 
 # ------------------------------------------------------------------------------
@@ -117,12 +118,16 @@ def modulus(img):
 
 def circle_finder(img):
     """
+    Finds if there is a circle in the image.
+    The loop runs over the bottom of the matrix and
+    checks if the values change from 0 to >0 more then it is expected
 
     Confusion matrix:
     [[88  0]
     [ 1 91]]
-    :param img:
-    :return:
+
+    :param img: The 8x8 pixel matrix as a list
+    :return: True if there is no circle, False if there is a circle
     """
     c = 0
     flag = False
@@ -221,6 +226,7 @@ def q21():
                                                              predicted2))
 
     # ------------- Question 21g Logistic Classifier- Our best features ---------------------------
+
     # creating the X
     x = np.column_stack((circle_finder_arr, center_values_arr ,modulus_arr,  num_of_zeros_arr, var_arr))
     # scaling the values for better classification performance

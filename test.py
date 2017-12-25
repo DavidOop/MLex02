@@ -53,6 +53,7 @@ def vbf(d):
                 s.append(0)
     return np.var(s)
 
+
 n_samples = len(digits.images)
 data = digits.images
 
