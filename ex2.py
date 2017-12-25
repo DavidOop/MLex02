@@ -229,40 +229,7 @@ def q21():
           (metrics.classification_report(expected, predicted)))
     print(
         "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted))
-    # ---------------------------- Question 21h ---------------------------
-    #
-    # n_samples = len(digits.images)
-    # data = digits.images.reshape((n_samples, -1))
-    # circle_finder_arr = properties(summ, data)
-    # modulus_arr = properties(var_maen, data)
-    # center_values_arr = properties(center_values, data)
-    # num_of_zeros_arr = properties(num_of_zeros, data)
-    # var_arr = properties(var, data)
-    # a = properties(modulus, data)
-    # b = properties(circle_finder, data)
-    # conv_arr = properties(conv, data)
-    #
-    #
-    #
-    # x = np.column_stack((conv_arr, center_values_arr, num_of_zeros_arr, var_arr, modulus_arr, a, b))
-    # # scaling the values for better classification performance
-    # x_scaled = preprocessing.scale(x)
-    #
-    # # the predicted outputs
-    # y = digits.target  # Training Logistic regression
-    # logistic_classifier = linear_model.LogisticRegression()
-    # logistic_classifier.fit(x_scaled, y)
-    # # show how good is the classifier on the training data
-    # expected = y
-    # predicted = logistic_classifier.predict(x_scaled)
-    #
-    # print("Logistic regression using Circle Finder, "
-    #       "Modulus, Center Values features:\n%s\n" %
-    #       (metrics.classification_report(expected, predicted)))
-    # print(
-    #     "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted))
-    # # estimate the generalization performance using cross validation
-    # predicted2 = cross_val_predict(logistic_classifier, x_scaled, y, cv=10)
+
 
 q20()
 q21()
