@@ -13,12 +13,11 @@ from sklearn import preprocessing
 from sklearn.model_selection import cross_val_predict
 
 # ******************************************************************************
-# -------------------- Import the database ----------------------
+# -------------------- Import the database -------------------------------------
 
 # The digits data set
 digits = datasets.load_digits()
-
-
+# ******************************************************************************
 # ------------------------------ Question 20 -----------------------------------
 def q20():
     # To apply a classifier on this data, we need to flatten the image, to
@@ -54,11 +53,15 @@ def q20():
         plt.axis('off')
         plt.imshow(image, cmap=plt.cm.gray_r, interpolation='nearest')
         plt.title('%i %i' % (expectation, prediction))
-    # plt.show()
+    plt.show()
 
 
+q20()
 # ***********************************************************************************
-# ------------------------------- Question 21 Our Features ---------------------------
+# ------------------------------- Question 21 ---------------------------------------
+#
+# ------------------------------- Our Features --------------------------------------
+
 
 def center_values(img):
     """
@@ -217,7 +220,7 @@ def q21():
     print("Confusion matrix:\n%s" % metrics.confusion_matrix(expected,
                                                              predicted2))
 
-    # ------------------------- Question 21g Logistic Classifier- best features ---------------------------
+    # ------------- Question 21g Logistic Classifier- Our best features ---------------------------
     # creating the X
     x = np.column_stack((circle_finder_arr, center_values_arr ,modulus_arr,  num_of_zeros_arr, var_arr))
     # scaling the values for better classification performance
@@ -237,5 +240,4 @@ def q21():
         "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted))
 
 
-q20()
 q21()
