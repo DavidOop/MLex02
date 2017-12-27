@@ -373,7 +373,7 @@ def q21():
           (metrics.classification_report(expected, predicted)))
     print(
         "Confusion matrix:\n%s" % metrics.confusion_matrix(expected,
-                                                           predicted2))
+                                                           predicted))
     # estimate the generalization performance using cross validation
 
 
