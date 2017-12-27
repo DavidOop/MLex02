@@ -16,15 +16,16 @@ from sklearn.model_selection import cross_val_predict
 
 # The digits data set
 digits = datasets.load_digits()
+
 # ******************************************************************************
 # ------------------------------ Question 20 -----------------------------------
-"""
-    Use a Support Vector Machine classifier to predict for each image it's 
-    digit tag and display the wrong tags
-"""
 
 
 def q20():
+    """
+        Use a Support Vector Machine classifier to predict for each image it's
+        digit tag and display the wrong tags
+    """
     # To apply a classifier on this data, we need to flatten the image, to
     # turn the data in a (samples, feature) matrix:
     n_samples = len(digits.images)
@@ -64,121 +65,121 @@ def q20():
 # ******************************************************************************
 # ------------------------------- Question 21 ----------------------------------
 #
-# ------------------------------- Our Features ---------------------------------
-
-
-def center_values(img):
-    """
-    Sum the middle columns' pixel values
-
-    Confusion matrix:
-    [[88  0]
-    [10 82]]
-
-    :param img: The 8x8 pixel matrix as a list:
-    :return Sum of 2 middle columns:
-    """
-    return img[19] + img[27] + img[35] + img[43] + img[20] + img[28] + img[36] \
-           + img[44]
-
-
-# ******************************************************************************
-
-
-def num_of_zeros(img):
-    """
-    Count the amount of zero pixels in the image
-
-    Confusion matrix:
-    [[65 23]
-    [ 10 82]]
-
-    :param img: The 8x8 pixel matrix as a list:
-    :return: the amount of zero pixels in the image
-    """
-    return img.count(0.0)
-
-
-# ******************************************************************************
-
-def modulus(img):
-    """
-    Remove all black(darkest spots of the image)
-
-    Confusion matrix:
-    [[85  3]
-    [ 4 88]]
-
-    :param img: The 8x8 pixel matrix as a list
-    :return: Sum of the image without calculating 16
-    """
-    return sum([-(int(i) % 16) for i in img])
-
-
-# ******************************************************************************
-
-def circle_finder(img):
-    """
-    Finds if there is a circle in the image.
-    The loop runs over the bottom of the matrix and
-    checks if the values change from 0 to >0 more then it is expected
-
-    Confusion matrix:
-    [[88  0]
-    [ 1 91]]
-
-    :param img: The 8x8 pixel matrix as a list
-    :return: True if there is no circle, False if there is a circle
-    """
-    c = 0
-    flag = False
-    for i in img[32:]:
-        if i > 7 and not flag:
-            flag = True
-            c += 1
-        elif i <= 7 and flag:
-            flag = False
-            c += 1
-    return int(c <= 8)
-
-
-# ******************************************************************************
-
-def var(img):
-    """
-    Variance of the image values
-
-    Confusion matrix:
-    [[78 10]
-    [ 24 68]]
-
-    :param img: The 8x8 pixel matrix as a list:
-    :return: The variance
-    """
-    return np.var(img)
-
-
-# --------------------- End of our features -----------------------
-# ------------------------------------------------------------------------------
-
-
-def properties(features, test_set):
-    """
-    Receives all images, converts each image from a 8x8 pixel matrix
-    to list and sends the list to the right feature
-
-    :param features: The feature method
-    :param test_set: Array with all images
-    :return: Array that each cell has the value of the image according the
-    feature
-    """
-    return [features(np.ndarray.tolist(i)) for i in test_set]
-
-
 # ------------------------ Question 21e 3D figure ------------------------------
 
 
 def q21():
+    """
+    Answers all sections of Q21
+    :return: none
+    """
+
+    # --------------------------- Our Features ---------------------------------
+
+    def center_values(img):
+        """
+        Sum the middle columns' pixel values
+
+        Confusion matrix:
+        [[88  0]
+        [10 82]]
+
+        :param img: The 8x8 pixel matrix as a list:
+        :return Sum of 2 middle columns:
+        """
+        return img[19] + img[27] + img[35] + img[43] + img[20] + img[28] + img[
+            36] \
+               + img[44]
+
+    # **************************************************************************
+
+    def num_of_zeros(img):
+        """
+        Count the amount of zero pixels in the image
+
+        Confusion matrix:
+        [[65 23]
+        [ 10 82]]
+
+        :param img: The 8x8 pixel matrix as a list:
+        :return: the amount of zero pixels in the image
+        """
+        return img.count(0.0)
+
+    # **************************************************************************
+
+    def modulus(img):
+        """
+        Remove all black(darkest spots of the image)
+
+        Confusion matrix:
+        [[85  3]
+        [ 4 88]]
+
+        :param img: The 8x8 pixel matrix as a list
+        :return: Sum of the image without calculating 16
+        """
+        return sum([-(int(i) % 16) for i in img])
+
+    # **************************************************************************
+
+    def circle_finder(img):
+        """
+        Finds if there is a circle in the image.
+        The loop runs over the bottom of the matrix and
+        checks if the values change from 0 to >0 more then it is expected
+
+        Confusion matrix:
+        [[88  0]
+        [ 1 91]]
+
+        :param img: The 8x8 pixel matrix as a list
+        :return: True if there is no circle, False if there is a circle
+        """
+        c = 0
+        flag = False
+        for i in img[32:]:
+            if i > 7 and not flag:
+                flag = True
+                c += 1
+            elif i <= 7 and flag:
+                flag = False
+                c += 1
+        return int(c <= 8)
+
+    # **************************************************************************
+
+    def var(img):
+        """
+        Variance of the image values
+
+        Confusion matrix:
+        [[78 10]
+        [ 24 68]]
+
+        :param img: The 8x8 pixel matrix as a list:
+        :return: The variance
+        """
+        return np.var(img)
+
+    # --------------------- End of our features -----------------------
+
+    # ----------------------- Helper Function: ---------------------------
+
+    def properties(features, test_set):
+        """
+        Receives all images, converts each image from a 8x8 pixel matrix
+        to list and sends the list to the right feature
+
+        :param features: The feature method
+        :param test_set: Array with all images
+        :return: Array that each cell has the value of the image according the
+        feature
+        """
+        return [features(np.ndarray.tolist(i)) for i in test_set]
+
+    # -- Question 21b-e Prepare the data and show properties combinations --
+
     # Take all 1s and 0s
     indices_0_1 = np.where(
         np.logical_and(digits.target >= 0, digits.target <= 1))
@@ -364,7 +365,7 @@ def q21():
     logistic_classifier.fit(x_scaled, y)
     # show how good is the classifier on the training data
     expected = y
-    # predicted = logistic_classifier.predict(x_scaled)
+    # estimate the generalization performance using cross validation
     predicted = cross_val_predict(logistic_classifier, x_scaled, y, cv=10)
 
     print("Logistic regression using "
@@ -373,8 +374,10 @@ def q21():
           (metrics.classification_report(expected, predicted)))
     print(
         "Confusion matrix:\n%s" % metrics.confusion_matrix(expected,
-                                                           predicted2))
-    # estimate the generalization performance using cross validation
+                                                           predicted))
+
+
+# Main:
 
 
 q20()
