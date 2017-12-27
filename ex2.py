@@ -365,12 +365,12 @@ def q21():
     # show how good is the classifier on the training data
     expected = y
     # predicted = logistic_classifier.predict(x_scaled)
-    predicted2 = cross_val_predict(logistic_classifier, x_scaled, y, cv=10)
+    predicted = cross_val_predict(logistic_classifier, x_scaled, y, cv=10)
 
     print("Logistic regression using "
           "features: variance, top_mat, bottom_mat, left_mat, right_mat, "
           "center_mat, quarters_mat and var_of_sums:\n%s\n" %
-          (metrics.classification_report(expected, predicted2)))
+          (metrics.classification_report(expected, predicted)))
     print(
         "Confusion matrix:\n%s" % metrics.confusion_matrix(expected,
                                                            predicted2))
